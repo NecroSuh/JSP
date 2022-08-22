@@ -4,9 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>footer</title>
 </head>
-<body>footer.jsp
-	<hr>회사소개 | 제휴제안 | 개인정보처리방침
+<body>
+	<div align="center" style="padding-top: 100px;">
+	<hr>
+	<i style="color: navy; font-size: 30px; font-family: Gabriola;">
+		Copyright &copy; CARE Lab. All rights reserved.
+	</i>
+	</div>
 </body>
 </html>
