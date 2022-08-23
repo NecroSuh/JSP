@@ -4,21 +4,22 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>login</title>
 </head>
 <body>login.jsp<br>
-<%	
-	request.setCharacterEncoding("utf-8");
-	response.setCharacterEncoding("utf-8");
-%>
-<form action="chkUser.jsp" method="post">
-	<input type="text" name="id" placeholder="아이디"><br>
-	<input type="text" name="pwd" placeholder="비밀번호"><br>
-	<input type="radio" name="user" value="user">사용자
-	<input type="radio" name="user" value="admin">관리자
-	<br>
-	<input type="submit" value="로그인">
-</form>
-	
+	<form action="loginChk.jsp" method="post">
+		<input type="text" name="id"><br>
+		<input type="text" name="pwd"><br>
+		<input type="submit" name="로그인"><br>		
+	</form>
+	<hr>
+	<h3>set_get 이동</h3>
+	<form action="set_get.jsp" method="post">
+		<input type="text" name="id"><br>
+		<input type="text" name="pwd"><br>
+		<input type="text" name="name"><br>
+		<input type="text" name="addr"><br>		
+		<input type="submit" name="로그인"><br>		
+	</form>
 </body>
 </html>
