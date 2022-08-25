@@ -2,6 +2,7 @@ package day10;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MemberDAO {
 	Connection con;
@@ -14,30 +15,40 @@ public class MemberDAO {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			String id = "jsp", pwd = "1234";
 			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-			// 2.오라클 연결
 			con = DriverManager.getConnection(url, id, pwd);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public ArrayList<MemberDTO> getList() {
-		System.out.println("getList 실행");
+	public int userChk(String id, String pwd) {
+		System.out.println("id : " + id);
+		System.out.println("pwd : " + pwd);
 
-		ArrayList<MemberDTO> list = new ArrayList<>();
+		String sql = "select * from members where id=?";
+		try {
+			ps = con.prepareStatement(sql);
+			ps.setString(1, id);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				if (rs.getString("pwd").equals(pwd)) {
+					return 0;
+				}
+				return 1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
+	public List<MemberDTO> getMembers() {
 		String sql = "select * from members";
+		ArrayList<MemberDTO> list = new ArrayList<>();
 		try {
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				System.out.println(rs.getString("id"));
-				System.out.println(rs.getString("pwd"));
-				System.out.println(rs.getString("name"));
-				System.out.println(rs.getString("addr"));
-				System.out.println(rs.getString("tel"));
-				System.out.println("--------------");
-
 				MemberDTO dto = new MemberDTO();
 				dto.setId(rs.getString("id"));
 				dto.setPwd(rs.getString("pwd"));
@@ -51,5 +62,71 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	public MemberDTO info(String id) {
+		MemberDTO dto = new MemberDTO();
+		String sql = "select * from members where id='" + id + "'";
+		try {
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				dto.setId(rs.getString("id"));
+				dto.setPwd(rs.getString("pwd"));
+				dto.setName(rs.getString("name"));
+				dto.setAddr(rs.getString("addr"));
+				dto.setTel(rs.getString("tel"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	public int register(MemberDTO dto) {
+		int result = 0;
+		String sql = "insert into members values(?,?,?,?,?)";
+		try {
+			ps = con.prepareStatement(sql);
+			ps.setString(1, dto.getId());
+			ps.setString(2, dto.getPwd());
+			ps.setString(3, dto.getName());
+			ps.setString(4, dto.getAddr());
+			ps.setString(5, dto.getTel());
+
+			result = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public void delete(String id) {
+		String sql = "delete from members where id='" + id + "'";
+		try {
+			ps = con.prepareStatement(sql);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int modify(MemberDTO dto) {
+		int result = 0;
+		String sql = "update members set pwd=?,name=?,addr=?," + "tel=? where id=?";
+		try {
+			ps = con.prepareStatement(sql);
+			ps.setString(1, dto.getPwd());
+			ps.setString(2, dto.getName());
+			ps.setString(3, dto.getAddr());
+			ps.setString(4, dto.getTel());
+			ps.setString(5, dto.getId());
+
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }
